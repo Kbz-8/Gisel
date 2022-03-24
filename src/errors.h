@@ -41,7 +41,7 @@ class runtime_error
         inline const char* what() const noexcept { return _message.c_str(); }
         inline void expose() const
         {
-            std::cout << OUT_RED << "Gisel runtime error : " << OUT_DEF  << _message << std::endl;
+            std::cout << OUT_RED << "Nir runtime error : " << OUT_DEF  << _message << std::endl;
             std::exit(EXIT_FAILURE);
         }
     

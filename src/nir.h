@@ -10,7 +10,7 @@
 #include "warnings.h"
 #include "type.h"
 #include "expression_tree.h"
-#include "expression_tree_parser.h"
+#include "parser.h"
 #include "compiler_context.h"
 #include "variable.h"
 #include "expression.h"
@@ -20,5 +20,6 @@
 #include "module.h"
 #include "std_functions.h"
 #include "statement.h"
+#include "messages.h"
 
 #endif // __NIR__

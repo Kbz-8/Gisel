@@ -45,9 +45,7 @@ namespace
             flow execute(runtime_context& context) override
             {
                 for(const expression<lvalue>::ptr& decl : _decls)
-                {
                     context.push(decl->evaluate(context));
-                }
                 return flow::normal_flow();
             }
 

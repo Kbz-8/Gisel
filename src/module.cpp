@@ -37,8 +37,6 @@ class module_impl
                 *p.second = _context->get_public_function(p.first.c_str());
         }
         
-        inline bool try_load(const char* path, std::ostream* err) noexcept { load(path); return true; }
-        
         inline void reset_globals() { if(_context) _context->initialize(); }
 
     private:
@@ -54,7 +52,6 @@ runtime_context* module::get_runtime_context() { return _impl->get_runtime_conte
 void module::add_external_function_impl(std::string declaration, function f) { _impl->add_external_function_impl(std::move(declaration), std::move(f)); }
 void module::add_public_function_declaration(std::string declaration, std::string name, std::shared_ptr<function> fptr) { _impl->add_public_function_declaration(std::move(declaration), std::move(name), std::move(fptr)); }
 void module::load(const char* path) { _impl->load(path); }
-bool module::try_load(const char* path, std::ostream* err) noexcept { return _impl->try_load(path, err); }
 void module::reset_globals() { _impl->reset_globals(); }
 
 module::~module() {}

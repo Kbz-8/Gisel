@@ -109,6 +109,7 @@ void add_trace_functions(module& m, uint8_t opt)
             [](const std::string& val)
             {
                 puts(val.c_str());
+                fflush(stdout);
             }
         ));
     }

@@ -1,5 +1,5 @@
-#ifndef __EXPRESSION_TREE_PARSER__
-#define __EXPRESSION_TREE_PARSER__
+#ifndef __PARSER__
+#define __PARSER__
 
 #include <memory>
 #include "type.h"
@@ -12,4 +12,4 @@ using node_ptr = std::unique_ptr<node>;
 
 node_ptr parse_expression_tree(compiler_context& context, tk_iterator& it, type_handle type_id, bool allow_comma);
 
-#endif // __EXPRESSION_TREE_PARSER__
+#endif // __PARSER__

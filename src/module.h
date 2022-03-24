@@ -51,7 +51,7 @@ namespace details
                 else
                 {
                     static_assert(std::is_convertible<R, number>::value);
-                    ctx.retval() = std::make_shared<variable_impl<number> >(retval);
+                    ctx.retval() = std::make_shared<variable_impl<number>>(retval);
                 }
             }
         };
@@ -111,8 +111,8 @@ namespace details
             return std::string("fn ") + name + "(var arg : " + (function_argument_string(argument_declaration<Args>::result()) += ...).str + ") -> " + retval_declaration<R>::result();
     }
     
-    inline variable_ptr to_variable(number n) { return std::make_shared<variable_impl<number> >(n); }
-    inline variable_ptr to_variable(std::string str) { return std::make_shared<variable_impl<string> >(std::make_shared<std::string>(std::move(str))); }
+    inline variable_ptr to_variable(number n) { return std::make_shared<variable_impl<number>>(n); }
+    inline variable_ptr to_variable(std::string str) { return std::make_shared<variable_impl<string>>(std::make_shared<std::string>(std::move(str))); }
     
     template <typename T>
     T move_from_variable(const variable_ptr& v)
@@ -154,7 +154,6 @@ class module
         }
         
         void load(const char* path);
-        bool try_load(const char* path, std::ostream* err = nullptr) noexcept;
         
         void reset_globals();
         
