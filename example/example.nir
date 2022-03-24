@@ -1,0 +1,10 @@
+fn print_nb(var x : num) -> void
+{
+	print(to_str(x));
+}
+
+external fn main() -> void
+{
+	var i : num = 42;
+	print_nb(i);
+}

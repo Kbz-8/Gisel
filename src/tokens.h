@@ -1,0 +1,196 @@
+#ifndef __TOKENS__
+#define __TOKENS__
+
+#include <optional>
+#include <string>
+#include <variant>
+#include "streamstack.h"
+#include "duets_arrays.h"
+#include "utils.h"
+
+enum class Tokens
+{
+    kw_fn,
+    kw_var,
+    kw_for,
+	kw_while,
+	kw_do,
+	kw_break,
+	kw_continue,
+    kw_return,
+    kw_public,
+
+    type_void,
+    type_number,
+    type_string,
+
+    semicolon,
+    type_specifier,
+    bracket_b,
+    bracket_e,
+    embrace_b,
+    embrace_e,
+    comma,
+    dot,
+    square_b,
+    square_e,
+
+    statement_if,
+    statement_else,
+    statement_elif,
+
+    inc,
+	dec,
+
+    add_assign,
+    sub_assign,
+    mul_assign,
+    div_assign,
+    mod_assign,
+	
+	add,
+	sub,
+	mul,
+	div,
+	mod,
+    assign,
+
+    bitwise_and,
+
+    eq,
+    ne,
+    lt,
+    gt,
+    le,
+    ge,
+
+    question,
+    logical_not,
+    logical_and,
+    logical_or,
+
+    quote_mark,
+};
+
+struct eof{};
+struct identifier{ std::string name; };
+
+std::optional<Tokens> get_keyword(const std::string& word);
+std::optional<Tokens> get_operator(StreamStack& stream);
+
+inline bool operator==(const identifier& id1, const identifier& id2) { return id1.name == id2.name; }
+inline bool operator!=(const identifier& id1, const identifier& id2) { return id1.name != id2.name; }
+inline constexpr bool operator==(const eof&, const eof&) noexcept { return true; }
+inline constexpr bool operator!=(const eof&, const eof&) noexcept { return false; }
+
+using token_value = std::variant<Tokens, identifier, double, std::string, eof>;
+
+class Token
+{
+    public:
+        Token(token_value value, unsigned int line);
+
+		static inline duets_array<Tokens, std::string> kw_tokens
+		{
+            {Tokens::kw_fn, "fn"},
+            {Tokens::kw_public, "external"},
+            {Tokens::kw_var, "var"},
+            {Tokens::kw_for, "for"},
+            {Tokens::kw_while, "while"},
+            {Tokens::kw_do, "do"},
+            {Tokens::kw_break, "break"},
+            {Tokens::kw_continue, "continue"},
+            {Tokens::kw_return, "return"},
+
+            {Tokens::type_void, "void"},
+            {Tokens::type_number, "num"},
+            {Tokens::type_string, "string"},
+
+            {Tokens::statement_if, "if"},
+            {Tokens::statement_else, "else"},
+            {Tokens::statement_elif, "elif"}
+		};
+
+		static inline duets_array<Tokens, std::string> operators_token
+		{
+            {Tokens::semicolon, ";"},
+            {Tokens::comma, ","},
+            {Tokens::dot, "."},
+            {Tokens::type_specifier, ":"},
+            {Tokens::bitwise_and, "&"},
+            {Tokens::bracket_b, "("},
+            {Tokens::bracket_e, ")"},
+            {Tokens::embrace_b, "{"},
+            {Tokens::embrace_e, "}"},
+            {Tokens::square_b, "["},
+            {Tokens::square_e, "]"},
+
+            {Tokens::eq, "=="},
+            {Tokens::ne, "!="},
+            {Tokens::lt, "<"},
+            {Tokens::gt, ">"},
+            {Tokens::le, "<="},
+            {Tokens::ge, ">="},
+
+            {Tokens::question, "?"},
+            {Tokens::logical_not, "!"},
+            {Tokens::logical_and, "&&"},
+            {Tokens::logical_or, "||"},
+
+            {Tokens::inc, "++"},
+            {Tokens::dec, "--"},
+            {Tokens::add_assign, "+="},
+            {Tokens::sub_assign, "-="},
+            {Tokens::mul_assign, "*="},
+            {Tokens::div_assign, "/="},
+            {Tokens::mod_assign, "%="},
+
+            {Tokens::add, "+"},
+            {Tokens::sub, "-"},
+            {Tokens::mul, "*"},
+            {Tokens::div, "/"},
+            {Tokens::mod, "%"},
+            {Tokens::assign, "="},
+
+            {Tokens::quote_mark, "\""}
+		};
+
+        inline bool is_keyword() const { return std::holds_alternative<Tokens>(_value); }
+        inline bool is_number() const { return std::holds_alternative<double>(_value); }
+        inline bool is_identifier() const { return std::holds_alternative<identifier>(_value); }
+        inline bool is_eof() const { return std::holds_alternative<eof>(_value); }
+        inline bool is_string() const { return std::holds_alternative<std::string>(_value); }
+
+        inline Tokens get_token() const { return std::get<Tokens>(_value); }
+        inline const identifier& get_identifier() const { return std::get<identifier>(_value); }
+        inline const std::string& get_string() const { return std::get<std::string>(_value); }
+        inline double get_number() const { return std::get<double>(_value); }
+        inline const token_value& get_value() const { return _value; }
+    
+        inline size_t get_line_number() const noexcept { return _line; }
+
+        bool has_value(token_value value) const { return _value == std::move(value); }
+
+    private:
+        token_value _value;
+        unsigned int _line = 0;
+};
+
+namespace std
+{
+	inline std::string to_string(Tokens t) { return Token::kw_tokens.have(t) ? std::move(std::string(Token::kw_tokens[t])) : std::move(std::string(Token::operators_token[t])); }
+	
+	inline std::string to_string(const token_value& t)
+    {
+		return std::visit(overloaded
+        {
+			[](Tokens rt) { return to_string(rt); },
+			[](double d) { return to_string(d); },
+			[](const std::string& str) { return str; },
+			[](const identifier& id) { return id.name; },
+			[](eof) { return std::string("<EOF>"); }
+		}, t);
+	}
+}
+
+#endif // __TOKENS__
