@@ -12,7 +12,7 @@ class Warning
         Warning(std::string message, size_t line);
 
         inline const char* what() const noexcept { return _message.c_str(); }
-        inline void expose() const { std::cout << OUT_MAGENTA << _message << ", line : " << _line << OUT_DEF << std::endl; }
+        inline void expose() const { std::cout << OUT_MAGENTA << "Nir warning : " << OUT_DEF << _message << ", line : " << _line << std::endl; }
         inline int line() const noexcept { return _line; }
     
     private:
