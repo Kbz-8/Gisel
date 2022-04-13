@@ -16,9 +16,9 @@ Error::Error(std::string message, size_t line)
 void Error::expose() const
 {
     if(_line == -1)
-        std::cout << OUT_RED << "Nir error : " << OUT_DEF  << _message << std::endl;
+        std::cout << OUT_RED << "Nir error" << OUT_DEF << " : " << _message << std::endl;
     else
-        std::cout << OUT_RED << "Nir error : " << OUT_DEF  << _message << ", line : " << _line << std::endl;
+        std::cout << OUT_RED << "Nir error" << OUT_DEF << " : " << _message << ", line : " << _line << std::endl;
     std::exit(EXIT_FAILURE);
 }
 

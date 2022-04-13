@@ -186,7 +186,7 @@ namespace
     void pop_one_operator(std::stack<operator_info>& operator_stack, std::stack<node_ptr>& operand_stack, compiler_context& context, size_t line_number)
     {
         if(operand_stack.size() < operator_stack.top().number_of_operands)
-            compiler_error("Failed to parse an expression", line_number).expose();
+            compiler_error("failed to parse an expression", line_number).expose();
         
         std::vector<node_ptr> operands;
         operands.resize(operator_stack.top().number_of_operands);
@@ -228,7 +228,7 @@ namespace
                         continue;
                     }
                     else
-                        syntax_error("Expected closing ')'", it->get_line_number()).expose();
+                        syntax_error("expected closing ')'", it->get_line_number()).expose();
                 }
                 
                 if((oi.precedence == operator_precedence::prefix) != expected_operand)
@@ -276,7 +276,7 @@ namespace
                         ++it;
                         operand_stack.push(parse_expression_tree_impl(context, it, true, false));
                         if(!it->has_value(Tokens::type_specifier))
-                            syntax_error("Expected ':'", it->get_line_number()).expose();
+                            syntax_error("expected ':'", it->get_line_number()).expose();
                         break;
                     default: break;
                 }

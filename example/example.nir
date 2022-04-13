@@ -1,10 +1,12 @@
-fn print_nb(var x : num) -> void
+fn swap(var& x : num, var& y : num) -> void
 {
-	print(to_str(x));
+	var temp : num = x;
+	x = y;
+	y = temp;
 }
 
 external fn main() -> void
 {
-	var i : num = 42;
-	print_nb(i);
+	var string : str = "testste";
+	print(string);
 }

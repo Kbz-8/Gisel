@@ -7,7 +7,7 @@ class module;
 	
 void add_math_functions(module& m);
 void add_string_functions(module& m);
-void add_trace_functions(module& m, uint8_t opt);
+void add_io_functions(module& m, uint8_t opt);
 
 void add_standard_functions(module& m, uint8_t opt);
 

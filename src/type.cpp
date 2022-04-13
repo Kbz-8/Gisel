@@ -76,7 +76,7 @@ namespace std
 				const char* separator = "";
 				for(const function_type::param& p: ft.param_type_id)
                 {
-					ret += separator + to_string(p.type_id) + (p.by_ref ? "&" : "");
+					ret += separator + std::string(p.by_ref ? "var&" : "var") + " : " + to_string(p.type_id);
 					separator = ",";
 				}
 				ret += ")";

@@ -16,7 +16,7 @@ char_type get_char_type(int c)
         return char_type::eof;
     if(std::isspace(c))
         return char_type::space;
-    if(std::isalpha(c) || std::isdigit(c) || char(c) == '_')
+    if(std::isalpha(c) || std::isdigit(c) || char(c) == '_' || char(c) == '"')
         return char_type::alphanum;
     return char_type::punct;
 }
@@ -29,8 +29,24 @@ Token fetch_word(StreamStack& stream)
     
     int c = stream();
     
+    bool is_string = (bool)(c == '"');
+
+    if(is_string)
+    {
+        do
+        {
+            c = stream();
+            word.push_back(char(c));
+
+            if(c == '\n')
+                unexpected_error("\\n", stream.getline()).expose();
+        } while(c != '"');
+        word.pop_back();
+        return Token(std::move(word), line);
+    }
+
     bool is_number = std::isdigit(c);
-    
+
     do
     {
         word.push_back(char(c));
@@ -52,7 +68,7 @@ Token fetch_word(StreamStack& stream)
     {
         if(std::isdigit(word.front()))
         {
-            char* endptr;
+            char* endptr = nullptr;
             double num = strtol(word.c_str(), &endptr, 0);
             if(*endptr != 0)
             {
@@ -61,7 +77,7 @@ Token fetch_word(StreamStack& stream)
                     unexpected_error(endptr, stream.getline()).expose();
             }
             return Token(num, line);
-        } 
+        }
         return Token(identifier{std::move(word)}, line);
     }
 }

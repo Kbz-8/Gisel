@@ -1,4 +1,5 @@
 #include "std_functions.h"
+#include "errors.h"
 #include "module.h"
 
 #include <iostream>
@@ -51,10 +52,20 @@ void add_math_functions(module& m)
             return std::pow(x, y);
         }
     ));
+
+    m.add_external_function("abs", func::function<number(number)>(
+        [](number x)
+        {
+            float a = x;
+            long i = *(long*)&a; // tricky convertion
+            i &= ~(1u << 31); // set sign to 0 makes it positive
+            return *(float*)&i; // another tricky convertion
+        }
+    ));
     
     srand((unsigned int)time(0));
     
-    m.add_external_function("rand", func::function<number(number)>(
+    m.add_external_function("random", func::function<number(number)>(
         [](number x)
         {
             return rand() % int(x);
@@ -87,12 +98,14 @@ void add_string_functions(module& m)
     m.add_external_function("to_num", func::function<number(const std::string&)>(
         [](const std::string& str)
         {
-            return stod(str);
+            for(char const& c : str)
+                runtime_assertion(std::isdigit(c), "trying to convert non digit string to number");
+            return std::stod(str);
         }
     ));
 }
 
-void add_trace_functions(module& m, uint8_t opt)
+void add_io_functions(module& m, uint8_t opt)
 {
     if(opt == 0)
     {
@@ -119,7 +132,7 @@ void add_trace_functions(module& m, uint8_t opt)
         {
             std::string str;
             std::getline(std::cin, str);
-            return std::move(str);
+            return str;
         }
     ));
 }
@@ -128,5 +141,5 @@ void add_standard_functions(module& m, uint8_t opt)
 {
     add_math_functions(m);
     add_string_functions(m);
-    add_trace_functions(m, opt);
+    add_io_functions(m, opt);
 }

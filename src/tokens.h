@@ -67,9 +67,7 @@ enum class Tokens
     question,
     logical_not,
     logical_and,
-    logical_or,
-
-    quote_mark,
+    logical_or
 };
 
 struct eof{};
@@ -104,7 +102,7 @@ class Token
 
             {Tokens::type_void, "void"},
             {Tokens::type_number, "num"},
-            {Tokens::type_string, "string"},
+            {Tokens::type_string, "str"},
 
             {Tokens::statement_if, "if"},
             {Tokens::statement_else, "else"},
@@ -150,9 +148,7 @@ class Token
             {Tokens::mul, "*"},
             {Tokens::div, "/"},
             {Tokens::mod, "%"},
-            {Tokens::assign, "="},
-
-            {Tokens::quote_mark, "\""}
+            {Tokens::assign, "="}
 		};
 
         inline bool is_keyword() const { return std::holds_alternative<Tokens>(_value); }

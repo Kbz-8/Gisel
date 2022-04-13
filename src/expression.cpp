@@ -8,61 +8,63 @@
 #include "compiler_context.h"
 #include <type_traits>
 
-template<class V, typename T>
-struct is_boxed { static const bool value = false; };
+template <class V, typename T>
+struct is_boxed { static constexpr const bool value = false; };
 
-template<typename T>
-struct is_boxed<std::shared_ptr<variable_impl<T>>,T> { static const bool value = true; };
+template <typename T>
+struct is_boxed<std::shared_ptr<variable_impl<T>>,T> { static constexpr const bool value = true; };
 
-template<typename T>
+template <typename T>
 struct remove_cvref { using type = typename std::remove_cv<typename std::remove_reference<T>::type>::type; };
 
 template <typename T>
-decltype(auto) unbox(T&& t) { return t->value; }
+auto unbox(T&& t) { return t->value; }
 
-template<typename To, typename From>
-decltype(auto) convert(From&& from)
+template <typename To, typename From>
+auto convert(From&& from)
 {
     if constexpr(std::is_convertible<From, To>::value)
         return std::forward<From>(from);
     else if constexpr(is_boxed<From, To>::value)
         return unbox(std::forward<From>(from));
-    else if constexpr(std::is_same<To, string>::value)
-        return convert_to_string(from);
     else
-        static_assert(std::is_void<To>::value, "Cannot convert any type to 'void'");
+    	return To();
 }
 
-template<typename From, typename To>
+template <typename From, typename To>
 struct is_convertible { static const bool value = std::is_convertible<From, To>::value || is_boxed<From, To>::value || (std::is_same<To, string>::value && (std::is_same<From, number>::value || std::is_same<From, lnumber>::value)) || std::is_void<To>::value; };
 
 number lt(number n1, number n2) { return n1 < n2; }
 number lt(string s1, string s2) { return *s1 < *s2; }
 
-template<typename R, typename T>
+template <typename R, typename T>
 class global_variable_expression: public expression<R>
 {
     public:
         global_variable_expression(int idx) : _idx(idx) {}              
         R evaluate(runtime_context& context) const override
         {
-            if constexpr(is_convertible<R, T>::value)
-                return convert<R>(context.global(_idx)->template static_pointer_downcast<T>());
+        	if constexpr(std::is_void<R>::value)
+        		return;
+        	else
+        		return convert<R>(context.global(_idx)->template static_pointer_downcast<T>());
         }
 
     private:
         int _idx;
 };
 
-template<typename R, typename T>
+template <typename R, typename T>
 class local_variable_expression: public expression<R>
 {
     public:
         local_variable_expression(int idx) : _idx(idx) {}
         R evaluate(runtime_context& context) const override
         {
-            if constexpr(is_convertible<R, T>::value)
-                return convert<R>(context.local(_idx)->template static_pointer_downcast<T>());
+        	if constexpr(std::is_void<R>::value)
+        		return;
+        	else
+	        	return convert<R>(context.local(_idx)->template static_pointer_downcast<T>());
         }
 
     private:
@@ -116,7 +118,7 @@ class generic_expression: public expression<R>
 		struct name##_op\
 		{\
 			template <typename T1> \
-			decltype(auto) operator()(T1 t1)\
+			auto operator()(T1 t1)\
 			{\
 				code;\
 			}\
@@ -145,10 +147,6 @@ class generic_expression: public expression<R>
 		UNARY_EXPRESSION(bnot, return ~int(t1));
 		
 		UNARY_EXPRESSION(lnot, return !t1);
-		
-		UNARY_EXPRESSION(size, return t1->value.size());
-		
-		UNARY_EXPRESSION(tostring, return convert_to_string(t1));
 
 #undef UNARY_EXPRESSION
 
@@ -156,7 +154,7 @@ class generic_expression: public expression<R>
 		struct name##_op\
 		{\
 			template <typename T1, typename T2>\
-			decltype(auto) operator()(T1 t1, T2 t2)\
+			auto operator()(T1 t1, T2 t2)\
 			{\
 				code;\
 			}\
@@ -540,6 +538,7 @@ class expression_builder
                 CHECK_BINARY_OPERATION(assign, lstring, string);
                 CHECK_BINARY_OPERATION(comma, void, lstring);
                 CHECK_TERNARY_OPERATION(ternary, number, lstring, lstring);
+                
                 default: throw expression_builder_error();
             }
         }
@@ -627,7 +626,7 @@ typename expression<R>::ptr build_expression(type_handle type_id, compiler_conte
     }
     catch(const expression_builder_error&)
     {
-        compiler_error("Expression building failed", line_number).expose();
+        compiler_error("expression building failed", line_number).expose();
     }
 }
 

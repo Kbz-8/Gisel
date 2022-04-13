@@ -126,9 +126,8 @@ node::node(compiler_context& context, node_value value, std::vector<node_ptr> ch
                     _children[1]->check_conversion(number_handle, false);
                     break;
                 case node_operation::comma:
-                    for (int i = 0; i < int(_children.size()) - 1; ++i) {
+                    for(int i = 0; i < int(_children.size()) - 1; ++i)
                         _children[i]->check_conversion(void_handle, false);
-                    }
                     _type_id = _children.back()->get_type_id();
                     _lvalue = _children.back()->is_lvalue();
                     break;

@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 	
 	add_standard_functions(m, opts[0]);
 	
-	auto nir_main = m.create_public_function_caller<void>("main");
+	auto nir_main = m.create_external_function_caller<void>("main");
 
 	m.load(argv[1]);
 	if(opts[1] == 1)

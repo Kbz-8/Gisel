@@ -65,7 +65,7 @@ namespace details
             if constexpr(std::is_same<T, void>::value)
                 return "void";
             else if constexpr(std::is_convertible<T, std::string>::value)
-                return "string";
+                return "str";
             else
             {
                 static_assert(std::is_convertible<T, number>::value);
@@ -80,7 +80,7 @@ namespace details
         static constexpr const char* result()
         {
             if constexpr(std::is_convertible<const std::string&, T>::value)
-                return "string";
+                return "str";
             else
             {
                 static_assert(std::is_convertible<number, T>::value);
@@ -138,7 +138,7 @@ class module
         inline void add_external_function(const char* name, func::function<R(Args...)> f) { add_external_function_impl(details::create_function_declaration<R, Args...>(name), details::create_external_function(std::move(f))); }
         
         template<typename R, typename... Args>
-        auto create_public_function_caller(std::string name)
+        auto create_external_function_caller(std::string name)
         {
             std::shared_ptr<function> fptr = std::make_shared<function>();
             std::string decl = details::create_function_declaration<R, Args...>(name.c_str());

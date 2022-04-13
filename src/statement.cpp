@@ -36,7 +36,7 @@ namespace
         private:
             std::vector<statement_ptr> _statements;
     };
-        
+    
     class local_declaration_statement: public statement
     {
         public:
@@ -52,7 +52,7 @@ namespace
         private:
             std::vector<expression<lvalue>::ptr> _decls;
     };
-        
+    
     class break_statement: public statement
     {
         public:

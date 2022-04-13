@@ -8,11 +8,8 @@ tk_iterator::tk_iterator(std::deque<Token>& tokens) : _current(eof(), 0),
     {
         if(tokens.empty())
             return Token(eof(), 0);
-        else
-        {
-            Token ret = std::move(tokens.front());
-            tokens.pop_front();
-            return ret;
-        }
+        Token ret = std::move(tokens.front());
+        tokens.pop_front();
+        return ret;
     })
 { ++(*this); }
