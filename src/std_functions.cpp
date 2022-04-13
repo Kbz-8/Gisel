@@ -45,6 +45,13 @@ void add_math_functions(module& m)
             return std::exp(x);
         }
     ));
+
+    m.add_external_function("sqrt", func::function<number(number)>(
+        [](number x)
+        {
+            return std::sqrt(x);
+        }
+    ));
     
     m.add_external_function("pow", func::function<number(number, number)>(
         [](number x, number y)

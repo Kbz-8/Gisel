@@ -36,10 +36,21 @@ Token fetch_word(StreamStack& stream)
         do
         {
             c = stream();
-            word.push_back(char(c));
-
             if(c == '\n')
                 unexpected_error("\\n", stream.getline()).expose();
+            if(c == '\\')
+            {
+                switch(c = stream())
+                {
+                    case '\\': c = '\\'; break;
+                    case 'n': c = '\n'; break;
+                    case 't': c = '\t'; break;
+                    case 'r': c = '\r'; break;
+
+                    default: break;
+                }
+            }
+            word.push_back(char(c));
         } while(c != '"');
         word.pop_back();
         return Token(std::move(word), line);

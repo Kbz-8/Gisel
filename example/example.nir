@@ -1,12 +1,4 @@
-fn swap(var& x : num, var& y : num) -> void
-{
-	var temp : num = x;
-	x = y;
-	y = temp;
-}
-
 external fn main() -> void
 {
-	var string : str = "testste";
-	print(string);
+	print("hello world");
 }
