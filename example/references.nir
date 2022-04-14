@@ -1,0 +1,16 @@
+fn swap(var& x : num, var& y : num) -> void
+{
+	var temp : num = x;
+	x = y;
+	y = temp;
+}
+
+external fn main() -> void
+{
+	var i : num = 42;
+	var j : num = 24;
+	swap(:i, :j);
+
+	print(to_str(i)); // prints 24
+	print(to_str(j)); // prints 42
+}

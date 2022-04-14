@@ -7,6 +7,13 @@ std::optional<Tokens> get_keyword(const std::string& word)
 	return std::make_optional(Token::kw_tokens[word]);
 }
 
+std::optional<Macro_Tokens> get_macro(const std::string& word)
+{
+	if(!Token::macros_token.have(word))
+		return std::nullopt;
+	return std::make_optional(Token::macros_token[word]);
+}
+
 std::optional<Tokens> get_operator(StreamStack& stream)
 {
 	std::string c;

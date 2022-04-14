@@ -1,13 +1,15 @@
 #include "lexer.h"
 #include "errors.h"
 #include "warnings.h"
+#include "macro.h"
 
 enum class char_type
 {
     eof,
     space,
     alphanum,
-    punct
+    punct,
+    macro
 };
 
 char_type get_char_type(int c)
@@ -18,6 +20,8 @@ char_type get_char_type(int c)
         return char_type::space;
     if(std::isalpha(c) || std::isdigit(c) || char(c) == '_' || char(c) == '"')
         return char_type::alphanum;
+    if(c == (int)Token::macros_token[Macro_Tokens::macro][0])
+        return char_type::macro;
     return char_type::punct;
 }
 
@@ -46,9 +50,32 @@ Token fetch_word(StreamStack& stream)
                     case 'n': c = '\n'; break;
                     case 't': c = '\t'; break;
                     case 'r': c = '\r'; break;
+                    case '"': word.push_back('"'); c = stream(); break;
 
                     default: break;
                 }
+            }
+            if(c == '{')
+            {
+                std::string macro;
+                do
+                {
+                    c = stream();
+                    macro.push_back(c);
+                    if(c == '\n')
+                        unexpected_error("\\n", stream.getline()).expose();
+                } while(c != '}' && c != '"');
+                macro.pop_back();
+
+                if(Macros::get().get_sets().count(macro) && c != '"')
+                    word += Macros::get().get_sets()[macro];
+                else
+                {
+                    word.push_back('{');
+                    word += macro;
+                    word.push_back(c);
+                }
+                continue;
             }
             word.push_back(char(c));
         } while(c != '"');
@@ -70,6 +97,9 @@ Token fetch_word(StreamStack& stream)
             break;
         }
     } while(get_char_type(c) == char_type::alphanum || (is_number && c == '.'));
+
+    if(Macros::get().get_sets().count(word))
+        word = Macros::get().get_sets()[word];
     
     stream.push_back(c);
     
@@ -90,6 +120,42 @@ Token fetch_word(StreamStack& stream)
             return Token(num, line);
         }
         return Token(identifier{std::move(word)}, line);
+    }
+}
+
+void fetch_macro(StreamStack& stream)
+{
+    size_t line = stream.getline();
+    std::vector<std::string> identifiers;
+    identifiers.push_back("");
+    std::vector<Token> cache;
+    int c = stream();
+    std::optional<Macro_Tokens> t;
+
+    do
+    {
+        identifiers.back().push_back(char(c));
+        c = stream();
+        if(get_char_type(c) == char_type::space)
+        {
+            c = stream();
+            if(t = get_macro(identifiers.back()))
+                cache.push_back(Token(*t, line));
+            else if(cache.empty())
+                unexpected_macro_error(identifiers.back().c_str(), line).expose();
+            identifiers.push_back("");
+        }
+    } while(c != '\n' && get_char_type(c) != char_type::eof && get_char_type(c) != char_type::macro);
+    
+    if(c != '\n')
+        stream.push_back(c);
+
+    switch(cache.front().get_macro())
+    {
+        case Macro_Tokens::set : Macros::get().new_set(identifiers[1], identifiers[2]); break;
+        case Macro_Tokens::unset : Macros::get().remove_set(identifiers[1]); break;
+
+        default : break;
     }
 }
 
@@ -145,12 +211,10 @@ Token lexe(StreamStack& stream)
 
         switch(get_char_type(c))
         {
-            case char_type::eof:  return {eof(), line};
-            
             case char_type::space: continue;
-            
+            case char_type::eof:  return {eof(), line};
             case char_type::alphanum: stream.push_back(c); return fetch_word(stream);
-
+            case char_type::macro: fetch_macro(stream); continue;
             case char_type::punct:
             {
                 switch(c)
@@ -161,7 +225,6 @@ Token lexe(StreamStack& stream)
                         switch(c1)
                         {
                             case '/': skip_line_comment(stream); continue;
-                            
                             case '*': skip_block_comment(stream); continue;
                             
                             default: stream.push_back(c1);

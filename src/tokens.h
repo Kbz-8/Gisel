@@ -11,6 +11,7 @@
 enum class Tokens
 {
     kw_fn,
+    kw_import,
     kw_var,
     kw_for,
 	kw_while,
@@ -70,18 +71,26 @@ enum class Tokens
     logical_or
 };
 
+enum class Macro_Tokens
+{
+    macro,
+    set,
+    unset
+};
+
 struct eof{};
 struct identifier{ std::string name; };
 
 std::optional<Tokens> get_keyword(const std::string& word);
 std::optional<Tokens> get_operator(StreamStack& stream);
+std::optional<Macro_Tokens> get_macro(const std::string& word);
 
 inline bool operator==(const identifier& id1, const identifier& id2) { return id1.name == id2.name; }
 inline bool operator!=(const identifier& id1, const identifier& id2) { return id1.name != id2.name; }
 inline constexpr bool operator==(const eof&, const eof&) noexcept { return true; }
 inline constexpr bool operator!=(const eof&, const eof&) noexcept { return false; }
 
-using token_value = std::variant<Tokens, identifier, double, std::string, eof>;
+using token_value = std::variant<Tokens, Macro_Tokens, identifier, double, std::string, eof>;
 
 class Token
 {
@@ -91,6 +100,7 @@ class Token
 		static inline duets_array<Tokens, std::string> kw_tokens
 		{
             {Tokens::kw_fn, "fn"},
+            {Tokens::kw_import, "import"},
             {Tokens::kw_public, "external"},
             {Tokens::kw_var, "var"},
             {Tokens::kw_for, "for"},
@@ -151,15 +161,25 @@ class Token
             {Tokens::assign, "="}
 		};
 
+        static inline duets_array<Macro_Tokens, std::string> macros_token
+        {
+            {Macro_Tokens::macro, "@"},
+
+            {Macro_Tokens::set, "set"},
+            {Macro_Tokens::unset, "unset"}
+        };
+
         inline bool is_keyword() const { return std::holds_alternative<Tokens>(_value); }
         inline bool is_number() const { return std::holds_alternative<double>(_value); }
         inline bool is_identifier() const { return std::holds_alternative<identifier>(_value); }
         inline bool is_eof() const { return std::holds_alternative<eof>(_value); }
+        inline bool is_macro() const { return std::holds_alternative<Macro_Tokens>(_value); }
         inline bool is_string() const { return std::holds_alternative<std::string>(_value); }
 
         inline Tokens get_token() const { return std::get<Tokens>(_value); }
         inline const identifier& get_identifier() const { return std::get<identifier>(_value); }
         inline const std::string& get_string() const { return std::get<std::string>(_value); }
+        inline Macro_Tokens get_macro() const { return std::get<Macro_Tokens>(_value); }
         inline double get_number() const { return std::get<double>(_value); }
         inline const token_value& get_value() const { return _value; }
     
@@ -181,6 +201,7 @@ namespace std
 		return std::visit(overloaded
         {
 			[](Tokens rt) { return to_string(rt); },
+            [](Macro_Tokens mt) { return Token::macros_token[mt]; },
 			[](double d) { return to_string(d); },
 			[](const std::string& str) { return str; },
 			[](const identifier& id) { return id.name; },

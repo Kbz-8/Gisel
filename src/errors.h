@@ -27,6 +27,7 @@ Error compiler_error(const char* message, size_t line);
 
 Error unexpected_error(const char* unexpected, size_t line);
 Error unexpected_syntax_error(const char* unexpected, size_t line);
+Error unexpected_macro_error(const char* unexpected, size_t line);
 Error expected_syntax_error(const char* expected, size_t line);
 Error undeclared_error(const char* undeclared, size_t line);
 Error wrong_type_error(const char* source, const char* destination, bool lvalue, size_t line);

@@ -59,6 +59,12 @@ Error unexpected_syntax_error(const char* message, size_t line)
     sprintf(&dest[0], "unexpected syntax error : '%s'", message);
     return Error(std::move(dest), line);
 }
+Error unexpected_macro_error(const char* message, size_t line)
+{
+    std::string dest(strlen(message) + 38, '\0');
+    sprintf(&dest[0], "parsing error : unexpected '%s' as macro", message);
+    return Error(std::move(dest), line);
+}
 Error expected_syntax_error(const char* message, size_t line)
 {
     std::string dest(strlen(message) + 40, '\0');

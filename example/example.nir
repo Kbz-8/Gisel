@@ -1,4 +1,7 @@
+@set TWELVE 12
+
 external fn main() -> void
 {
-	print("hello world");
+	var word : str = "twelve is equal to {TWELVE}";
+	print(word);
 }

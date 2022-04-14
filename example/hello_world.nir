@@ -1,0 +1,4 @@
+external fn main() -> void
+{
+	print("hello world");
+}
