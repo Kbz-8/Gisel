@@ -1,3 +1,22 @@
+/**
+ * This file is a part of the Nir Interpreter
+ *
+ * Copyright (C) 2022 @kbz_8
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef __MODULE__
 #define __MODULE__
 
@@ -8,6 +27,7 @@
 #include <iostream>
 #include "variable.h"
 #include "runtime_context.h"
+#include "tokens.h"
 
 namespace details
 {
@@ -63,13 +83,13 @@ namespace details
         static constexpr const char* result()
         {
             if constexpr(std::is_same<T, void>::value)
-                return "void";
+                return Token::kw_tokens[Tokens::type_void].c_str();
             else if constexpr(std::is_convertible<T, std::string>::value)
-                return "str";
+                return Token::kw_tokens[Tokens::type_string].c_str();
             else
             {
                 static_assert(std::is_convertible<T, number>::value);
-                return "num";
+                return Token::kw_tokens[Tokens::type_number].c_str();
             }
         }
     };
@@ -80,11 +100,11 @@ namespace details
         static constexpr const char* result()
         {
             if constexpr(std::is_convertible<const std::string&, T>::value)
-                return "str";
+                return Token::kw_tokens[Tokens::type_string].c_str();
             else
             {
                 static_assert(std::is_convertible<number, T>::value);
-                return "num";
+                return Token::kw_tokens[Tokens::type_number].c_str();
             }
         }
     };

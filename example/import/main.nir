@@ -1,0 +1,6 @@
+import "import.nir"
+
+external fn main() -> void
+{
+	say_hello();
+}

@@ -1,0 +1,4 @@
+external fn say_hello() -> void
+{
+	print("hello");
+}
