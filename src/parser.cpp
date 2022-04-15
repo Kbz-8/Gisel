@@ -321,8 +321,7 @@ namespace
         {
             if(allow_empty && operand_stack.empty() && operator_stack.empty())
                 return node_ptr();
-            else
-                syntax_error("operand expected", it->get_line_number()).expose();
+            syntax_error("operand expected", it->get_line_number()).expose();
         }
         
         while(!operator_stack.empty())

@@ -139,3 +139,10 @@ Error file_not_found(const char* file)
     msg += file;
     return Error(std::move(msg), -2);
 }
+
+Error file_not_found(const char* file, size_t line)
+{
+    std::string msg = "file not found : ";
+    msg += file;
+    return Error(std::move(msg), line);
+}

@@ -1,4 +1,4 @@
-import "import.nir"
+import "import.nir";
 
 external fn main() -> void
 {

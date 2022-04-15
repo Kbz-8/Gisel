@@ -98,6 +98,7 @@ struct node
     inline size_t get_line_number() const { return _line_number; }
     
     void check_conversion(type_handle type_id, bool lvalue) const;
+    void check_file(const char* file) const;
 
     private:
         node_value _value;

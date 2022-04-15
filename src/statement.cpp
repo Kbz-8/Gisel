@@ -43,7 +43,7 @@ namespace
             
             flow execute(runtime_context& context) override 
             {
-                auto _ = context.enter_scope();
+                context.enter_scope();
                 for(const statement_ptr& statement : _statements)
                 {
                     if(flow f = statement->execute(context); f.type() != flow_type::f_normal)
@@ -133,7 +133,7 @@ namespace
             
             flow execute(runtime_context& context) override
             {
-                auto _ = context.enter_scope();
+                context.enter_scope();
                 
                 for(const expression<lvalue>::ptr& decl : _decls)
                     context.push(decl->evaluate(context));
@@ -239,7 +239,7 @@ namespace
             
             flow execute(runtime_context& context) override
             {
-                auto _ = context.enter_scope();
+                context.enter_scope();
                 
                 for(const expression<lvalue>::ptr& decl : _decls)
                     context.push(decl->evaluate(context));
@@ -252,6 +252,16 @@ namespace
             expression<number>::ptr _expr2;
             expression<void>::ptr _expr3;
             statement_ptr _statement;
+    };
+
+    class import_statement : public statement
+    {
+        public:
+            import_statement(expression<string>::ptr expr) : _expr(std::move(expr)) {}
+            inline flow execute(runtime_context& context) override { _expr->evaluate(context); }
+
+        private:
+            expression<string>::ptr _expr;
     };
 }
 
@@ -275,3 +285,4 @@ statement_ptr create_while_statement(expression<number>::ptr expr, statement_ptr
 statement_ptr create_do_statement(expression<number>::ptr expr, statement_ptr statement) { return std::make_unique<do_statement>(std::move(expr), std::move(statement)); }
 statement_ptr create_for_statement(expression<void>::ptr expr1, expression<number>::ptr expr2, expression<void>::ptr expr3, statement_ptr statement) { return std::make_unique<for_statement>(std::move(expr1), std::move(expr2), std::move(expr3), std::move(statement)); }
 statement_ptr create_for_statement(std::vector<expression<lvalue>::ptr> decls, expression<number>::ptr expr2, expression<void>::ptr expr3, statement_ptr statement) { return std::make_unique<for_declare_statement>(std::move(decls), std::move(expr2), std::move(expr3), std::move(statement)); }
+statement_ptr create_import_statement(expression<string>::ptr expr) { return std::make_unique<import_statement>(std::move(expr)); }

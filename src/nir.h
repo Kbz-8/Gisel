@@ -37,7 +37,7 @@
 #include "compiler.h"
 #include "incomplete_function.h"
 #include "module.h"
-#include "std_functions.h"
+#include "builtin_functions.h"
 #include "statement.h"
 #include "messages.h"
 

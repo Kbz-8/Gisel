@@ -57,6 +57,7 @@ Error wrong_type_error(const char* source, const char* destination, bool lvalue,
 Error already_declared_error(const char* name, size_t line);
 
 Error file_not_found(const char* file);
+Error file_not_found(const char* file, size_t line);
 
 class runtime_error
 {

@@ -20,6 +20,8 @@
 #include "expression_tree.h"
 #include "utils.h"
 
+#include <filesystem>
+
 namespace
 {
     bool is_convertible(type_handle type_from, bool lvalue_from, type_handle type_to, bool lvalue_to)
@@ -28,9 +30,15 @@ namespace
             return true;
         if(lvalue_to)
             return lvalue_from && type_from == type_to;
-        if (type_from == type_to)
+        if(type_from == type_to)
             return true;
         return type_from == type_registry::get_number_handle() && type_to == type_registry::get_string_handle();
+    }
+
+    bool is_file(const char* file)
+    {
+        std::filesystem::path f(file);
+        return std::filesystem::exists(f) ? true : false;
     }
 }
 
@@ -38,6 +46,12 @@ void node::check_conversion(type_handle type_id, bool lvalue) const
 {
     if(!is_convertible(_type_id, _lvalue, type_id, lvalue))
         wrong_type_error(std::to_string(_type_id).c_str(), std::to_string(type_id).c_str(), lvalue, _line_number).expose();
+}
+
+void node::check_file(const char* file) const
+{
+    if(!is_file(file))
+        file_not_found(file, _line_number).expose();
 }
 
 node::node(compiler_context& context, node_value value, std::vector<node_ptr> children, size_t line_number) : _value(std::move(value)), _children(std::move(children)), _line_number(line_number)
@@ -186,9 +200,10 @@ node::node(compiler_context& context, node_value value, std::vector<node_ptr> ch
                         semantic_error(std::string(to_string(_children[0]->_type_id) + " is not callable").c_str(), _line_number).expose();
                     }
                 break;
-
                 case node_operation::import:
-                    
+                    _children[1]->check_conversion(string_handle, false);
+                    _lvalue = false;
+                    _children[1]->check_file(_children[1]->get_string().data());
                 break;
             }
         }

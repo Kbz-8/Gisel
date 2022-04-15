@@ -36,13 +36,13 @@ enum struct flow_type
 class flow
 {
     public:
-        flow_type type() const { return _type; }
-        int break_level() const { return _break_level; }
-        static inline flow normal_flow() { return flow(flow_type::f_normal, 0); }
-        static inline flow break_flow(int break_level) { return flow(flow_type::f_break, break_level); }
-        static inline flow continue_flow() { return flow(flow_type::f_continue, 0); }
-        static inline flow return_flow() { return flow(flow_type::f_return, 0); }
-        inline flow consume_break() { return _break_level == 1 ? flow::normal_flow() : flow::break_flow(_break_level-1); }
+        inline flow_type type() const noexcept { return _type; }
+        inline int break_level() const noexcept { return _break_level; }
+        static inline flow normal_flow() noexcept { return flow(flow_type::f_normal, 0); }
+        static inline flow break_flow(int break_level) noexcept { return flow(flow_type::f_break, break_level); }
+        static inline flow continue_flow() noexcept { return flow(flow_type::f_continue, 0); }
+        static inline flow return_flow() noexcept { return flow(flow_type::f_return, 0); }
+        inline flow consume_break() noexcept { return _break_level == 1 ? flow::normal_flow() : flow::break_flow(_break_level - 1); }
         
     private:
         flow_type _type;
@@ -50,12 +50,10 @@ class flow
         flow(flow_type type, int break_level);
 };
 
-class runtime_context;
-
 class statement
 {
     public:
-        virtual flow execute(runtime_context& context) = 0;
+        virtual flow execute(class runtime_context& context) = 0;
         virtual ~statement() = default;
     
     protected:
@@ -83,5 +81,6 @@ statement_ptr create_while_statement(expression<number>::ptr expr, statement_ptr
 statement_ptr create_do_statement(expression<number>::ptr expr, statement_ptr statement);
 statement_ptr create_for_statement(expression<void>::ptr expr1, expression<number>::ptr expr2, expression<void>::ptr expr3, statement_ptr statement);
 statement_ptr create_for_statement(std::vector<expression<lvalue>::ptr> decls, expression<number>::ptr expr2, expression<void>::ptr expr3, statement_ptr statement);
+statement_ptr create_import_statement(expression<string>::ptr expr);
 
 #endif // __STATEMENT__

@@ -92,6 +92,7 @@ namespace
     statement_ptr compile_break_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     statement_ptr compile_continue_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     statement_ptr compile_return_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
+    statement_ptr compile_import_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     
     statement_ptr compile_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf, bool in_switch)
     {
@@ -107,6 +108,7 @@ namespace
                 case Tokens::kw_break:     return compile_break_statement(ctx, it, pf);
                 case Tokens::kw_continue:  return compile_continue_statement(ctx, it, pf);
                 case Tokens::kw_return:    return compile_return_statement(ctx, it, pf);
+                case Tokens::kw_import:    return compile_import_statement(ctx, it, pf);
                 
                 default: break;
             }
@@ -304,6 +306,13 @@ namespace
         auto _ = ctx.scope();
         std::vector<statement_ptr> block = compile_block_contents(ctx, it, pf);
         return create_block_statement(std::move(block));
+    }
+
+    statement_ptr compile_import_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
+    {
+        parse_token_value(ctx, it, Tokens::kw_import);
+        
+        parse_token_value(ctx, it, Tokens::semicolon);
     }
 }
 
