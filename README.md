@@ -8,18 +8,13 @@ There is an API to interact between C++ and Nir that allows you to write C++ fun
 Here's an example of Nir code
 
 ``` Rust
-fn swap(var& x : num, var& y : num) -> void // params given by reference
-{
-    var temp : num = x;
-    x = y;
-    y = temp;
-}
+import "std_memory.nir"; // imports std_swap
 
 exteral fn main() -> void
 {
     var i : num = 42;
     var j : num = 12;
-    swap(:i, :j); // pass references to i and j
+    std_swap(:i, :j); // pass references to i and j
     print(to_str(i));
     print(to_str(j));
 }
