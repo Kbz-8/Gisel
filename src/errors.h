@@ -88,4 +88,4 @@ inline void runtime_assertion(bool b, std::string message)
 		runtime_error(std::move(message)).expose();
 }
 
-#endif // __EROROR__
+#endif // __ERRORS__

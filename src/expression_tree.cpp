@@ -201,7 +201,9 @@ node::node(compiler_context& context, node_value value, std::vector<node_ptr> ch
                     }
                 break;
                 case node_operation::import:
+                    std::cout << "test" << std::endl;
                     _children[1]->check_conversion(string_handle, false);
+                    std::cout << "test2" << std::endl;
                     _lvalue = false;
                     _children[1]->check_file(_children[1]->get_string().data());
                 break;

@@ -39,7 +39,8 @@ namespace
         logical_and,
         logical_or,
         assignment,
-        comma
+        comma,
+        import
     };
     
     enum class operator_associativity
@@ -89,6 +90,7 @@ namespace
                 case node_operation::mod_assign:
                 case node_operation::ternary: precedence = operator_precedence::assignment; break;
                 case node_operation::comma: precedence = operator_precedence::comma; break;
+                case node_operation::import: precedence = operator_precedence::import; break;
             }
             
             switch(precedence)
@@ -109,6 +111,7 @@ namespace
                 case node_operation::negative:
                 case node_operation::bnot:
                 case node_operation::lnot:
+                case node_operation::import:
                 case node_operation::call: number_of_operands = 1; break;
                 case node_operation::ternary: number_of_operands = 3; break;
                 
@@ -173,6 +176,8 @@ namespace
                 return operator_info(node_operation::comma, line_number);
             case Tokens::bracket_b:
                 return operator_info(node_operation::call, line_number);
+            case Tokens::kw_import:
+                return operator_info(node_operation::import, line_number);
 
             default: unexpected_syntax_error(std::to_string(token).c_str(), line_number).expose();
         }
@@ -290,13 +295,14 @@ namespace
                                     syntax_error("expected ',' or closing ')'", it->get_line_number()).expose();
                             }
                         }
-                        break;
+                    break;
                     case node_operation::ternary:
                         ++it;
                         operand_stack.push(parse_expression_tree_impl(context, it, true, false));
                         if(!it->has_value(Tokens::type_specifier))
                             syntax_error("expected ':'", it->get_line_number()).expose();
-                        break;
+                    break;
+                    
                     default: break;
                 }
                 

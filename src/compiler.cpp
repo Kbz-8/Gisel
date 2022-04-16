@@ -92,9 +92,8 @@ namespace
     statement_ptr compile_break_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     statement_ptr compile_continue_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     statement_ptr compile_return_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
-    statement_ptr compile_import_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf);
     
-    statement_ptr compile_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf, bool in_switch)
+    statement_ptr compile_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
     {
         if(it->is_keyword())
         {
@@ -108,7 +107,6 @@ namespace
                 case Tokens::kw_break:     return compile_break_statement(ctx, it, pf);
                 case Tokens::kw_continue:  return compile_continue_statement(ctx, it, pf);
                 case Tokens::kw_return:    return compile_return_statement(ctx, it, pf);
-                case Tokens::kw_import:    return compile_import_statement(ctx, it, pf);
                 
                 default: break;
             }
@@ -127,7 +125,7 @@ namespace
     
     statement_ptr compile_for_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
     {
-        auto _ = ctx.scope();
+        ctx.scope();
     
         parse_token_value(ctx, it, Tokens::kw_for);
         parse_token_value(ctx, it, Tokens::bracket_b);
@@ -187,7 +185,7 @@ namespace
     
     statement_ptr compile_if_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
     {
-        auto _ = ctx.scope();
+        ctx.scope();
         parse_token_value(ctx, it, Tokens::statement_if);
         
         parse_token_value(ctx, it, Tokens::bracket_b);
@@ -291,28 +289,28 @@ namespace
             parse_token_value(ctx, it, Tokens::embrace_b);
             
             while(!it->has_value(Tokens::embrace_e))
-                ret.push_back(compile_statement(ctx, it, pf, false));
+                ret.push_back(compile_statement(ctx, it, pf));
             
             parse_token_value(ctx, it, Tokens::embrace_e);
         }
         else
-            ret.push_back(compile_statement(ctx, it, pf, false));
+            ret.push_back(compile_statement(ctx, it, pf));
         
         return ret;
     }
     
     statement_ptr compile_block_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
     {
-        auto _ = ctx.scope();
+        ctx.scope();
         std::vector<statement_ptr> block = compile_block_contents(ctx, it, pf);
         return create_block_statement(std::move(block));
     }
 
-    statement_ptr compile_import_statement(compiler_context& ctx, tk_iterator& it, possible_flow pf)
+    statement_ptr compile_import_statement(compiler_context& ctx, tk_iterator& it)
     {
         parse_token_value(ctx, it, Tokens::kw_import);
-        
-        parse_token_value(ctx, it, Tokens::semicolon);
+        expression<string>::ptr expr = build_string_expression(ctx, it);
+        return create_import_statement(std::move(expr));
     }
 }
 
@@ -466,6 +464,10 @@ runtime_context compile(tk_iterator& it, const std::vector<std::pair<std::string
 
                 break;
             }
+            case Tokens::kw_import:
+                compile_import_statement(ctx, it);
+                parse_token_value(ctx, it, Tokens::semicolon);
+            break;
             default:
                 for(expression<lvalue>::ptr& expr : compile_variable_declaration(ctx, it))
                     initializers.push_back(std::move(expr));

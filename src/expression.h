@@ -48,6 +48,7 @@ class expression
 
 expression<void>::ptr build_void_expression(compiler_context& context, tk_iterator& it);
 expression<number>::ptr build_number_expression(compiler_context& context, tk_iterator& it);
+expression<string>::ptr build_string_expression(compiler_context& context, tk_iterator& it);
 expression<lvalue>::ptr build_initialization_expression(compiler_context& context, tk_iterator& it, type_handle type_id, bool allow_comma);
 expression<lvalue>::ptr build_default_initialization(type_handle type_id);
 

@@ -658,6 +658,7 @@ class default_initialization_expression: public expression<lvalue>
 
 expression<void>::ptr build_void_expression(compiler_context& context, tk_iterator& it) { return build_expression<void>(type_registry::get_void_handle(), context, it, true); }
 expression<number>::ptr build_number_expression(compiler_context& context, tk_iterator& it) { return build_expression<number>(type_registry::get_number_handle(), context, it, true); }
+expression<string>::ptr build_string_expression(compiler_context& context, tk_iterator& it) { return build_expression<string>(type_registry::get_number_handle(), context, it, true); }
 expression<lvalue>::ptr build_initialization_expression(compiler_context& context, tk_iterator& it, type_handle type_id, bool allow_comma) { return build_expression<lvalue>(type_id, context, it, allow_comma); }
 
 expression<lvalue>::ptr build_default_initialization(type_handle type_id)
@@ -670,7 +671,7 @@ expression<lvalue>::ptr build_default_initialization(type_handle type_id)
             {
                 case simple_type::number:  return expression<lvalue>::ptr(std::make_unique<default_initialization_expression<number>>());
                 case simple_type::string:  return expression<lvalue>::ptr(std::make_unique<default_initialization_expression<string>>());
-                case simple_type::nothing: return expression<lvalue>::ptr(nullptr); //cannot happen
+                case simple_type::nothing: return expression<lvalue>::ptr(nullptr); // cannot happen
             }
         },
         [&](const function_type& ft) { return expression<lvalue>::ptr(std::make_unique<default_initialization_expression<function>>()); },

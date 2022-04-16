@@ -258,7 +258,7 @@ namespace
     {
         public:
             import_statement(expression<string>::ptr expr) : _expr(std::move(expr)) {}
-            inline flow execute(runtime_context& context) override { _expr->evaluate(context); }
+            inline flow execute(runtime_context& context) override { _expr->evaluate(context); return flow::normal_flow(); }
 
         private:
             expression<string>::ptr _expr;

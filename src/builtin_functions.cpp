@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "std_functions.h"
+#include "builtin_functions.h"
 #include "errors.h"
 #include "module.h"
 
@@ -104,7 +104,7 @@ void add_string_functions(module& m)
     m.add_external_function("strlen", func::function<number(const std::string&)>(
         [](const std::string& str)
         {
-            return str.size();
+            return str.length();
         }
     ));
     
