@@ -10,7 +10,7 @@ Here's an example of Nir code
 ``` Rust
 import "std_memory.nir"; // imports std_swap
 
-exteral fn main() -> void
+export fn main() -> void
 {
     var i : num = 42;
     var j : num = 12;
