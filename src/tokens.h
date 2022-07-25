@@ -120,7 +120,7 @@ class Token
 		{
             {Tokens::kw_fn, "fn"},
             {Tokens::kw_import, "import"},
-            {Tokens::kw_public, "external"},
+            {Tokens::kw_public, "export"},
             {Tokens::kw_var, "var"},
             {Tokens::kw_for, "for"},
             {Tokens::kw_while, "while"},

@@ -22,12 +22,11 @@
 
 #include <cstdint>
 
-class module;
+class Nir_module;
 	
-void add_math_functions(module& m);
-void add_string_functions(module& m);
-void add_io_functions(module& m, uint8_t opt);
+void add_string_functions(Nir_module& m);
+void add_io_functions(Nir_module& m);
 
-void add_standard_functions(module& m, uint8_t opt);
+void add_standard_functions(Nir_module& m);
 
 #endif // __STD_FUNCTIONS__

@@ -1,4 +1,4 @@
-external fn main() -> void
+export fn main() -> void
 {
 	print("hello world");
 }

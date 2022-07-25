@@ -36,7 +36,7 @@
 #include "runtime_context.h"
 #include "compiler.h"
 #include "incomplete_function.h"
-#include "module.h"
+#include <nir_api.h>
 #include "builtin_functions.h"
 #include "statement.h"
 #include "messages.h"

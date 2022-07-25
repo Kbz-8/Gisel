@@ -5,7 +5,7 @@ fn swap(var& x : num, var& y : num) -> void
 	y = temp;
 }
 
-external fn main() -> void
+export fn main() -> void
 {
 	var i : num = 42;
 	var j : num = 24;

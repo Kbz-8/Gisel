@@ -20,14 +20,14 @@
 #ifndef __MODULE__
 #define __MODULE__
 
-#include "function.h"
+#include <function.h>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 #include <iostream>
-#include "variable.h"
-#include "runtime_context.h"
-#include "tokens.h"
+#include <variable.h>
+#include <runtime_context.h>
+#include <tokens.h>
 
 namespace details
 {
@@ -147,12 +147,12 @@ namespace details
     }
 }
 
-class module_impl;
+class Nir_module_impl;
 
-class module
+class Nir_module
 {
     public:
-        module();
+        Nir_module();
         
         template<typename R, typename... Args>
         inline void add_external_function(const char* name, func::function<R(Args...)> f) { add_external_function_impl(details::create_function_declaration<R, Args...>(name), details::create_external_function(std::move(f))); }
@@ -177,10 +177,10 @@ class module
         
         void reset_globals();
         
-        ~module();
+        ~Nir_module();
 
     private:
-        std::unique_ptr<module_impl> _impl;
+        std::unique_ptr<Nir_module_impl> _impl;
         void add_external_function_impl(std::string declaration, function f);
         void add_public_function_declaration(std::string declaration, std::string name, std::shared_ptr<function> fptr);
         runtime_context* get_runtime_context();

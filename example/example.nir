@@ -1,6 +1,6 @@
 @set TWELVE 12
 
-external fn main() -> void
+export fn main() -> void
 {
 	var word : str = "twelve is equal to {TWELVE}";
 	var t : num = to_num(word);

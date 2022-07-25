@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <cstdio>
-#include "module.h"
+#include <nir_api.h>
 #include "errors.h"
 #include "streamstack.h"
 #include "lexer.h"
@@ -27,10 +27,10 @@
 #include "file.h"
 #include "tk_iterator.h"
 
-class module_impl
+class Nir_module_impl
 {
     public:
-        module_impl() {}
+        Nir_module_impl() {}
         
         inline runtime_context* get_runtime_context() { return _context.get(); }
         
@@ -42,7 +42,7 @@ class module_impl
         
         inline void add_external_function_impl(std::string declaration, function f) { _external_functions.emplace_back(std::move(declaration), std::move(f)); }
         
-        void load(const char* path)
+        inline void load(const char* path)
         {
             File f(path);
             get_character get = [&](){ return f(); };
@@ -65,12 +65,12 @@ class module_impl
         std::unique_ptr<runtime_context> _context;
 };
 
-module::module() : _impl(std::make_unique<module_impl>()) {}
+Nir_module::Nir_module() : _impl(std::make_unique<Nir_module_impl>()) {}
 
-runtime_context* module::get_runtime_context() { return _impl->get_runtime_context(); }
-void module::add_external_function_impl(std::string declaration, function f) { _impl->add_external_function_impl(std::move(declaration), std::move(f)); }
-void module::add_public_function_declaration(std::string declaration, std::string name, std::shared_ptr<function> fptr) { _impl->add_public_function_declaration(std::move(declaration), std::move(name), std::move(fptr)); }
-void module::load(const char* path) { _impl->load(path); }
-void module::reset_globals() { _impl->reset_globals(); }
+runtime_context* Nir_module::get_runtime_context() { return _impl->get_runtime_context(); }
+void Nir_module::add_external_function_impl(std::string declaration, function f) { _impl->add_external_function_impl(std::move(declaration), std::move(f)); }
+void Nir_module::add_public_function_declaration(std::string declaration, std::string name, std::shared_ptr<function> fptr) { _impl->add_public_function_declaration(std::move(declaration), std::move(name), std::move(fptr)); }
+void Nir_module::load(const char* path) { _impl->load(path); }
+void Nir_module::reset_globals() { _impl->reset_globals(); }
 
-module::~module() {}
+Nir_module::~Nir_module() {}
