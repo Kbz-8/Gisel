@@ -149,7 +149,7 @@ namespace Nir
 		}
 	}
 
-	class module_impl;
+	class Module_impl;
 
 	class Module
 	{
@@ -182,7 +182,7 @@ namespace Nir
 			~Module();
 
 		private:
-			std::unique_ptr<module_impl> _impl;
+			std::unique_ptr<Module_impl> _impl;
 			void add_external_function_impl(std::string declaration, function f);
 			void add_public_function_declaration(std::string declaration, std::string name, std::shared_ptr<function> fptr);
 			runtime_context* get_runtime_context();

@@ -220,14 +220,14 @@ namespace std
 	
 	inline std::string to_string(const Nir::token_value& t)
     {
-		return std::visit(overloaded
+		return std::visit(Nir::overloaded
         {
 			[](Nir::Tokens rt) { return to_string(rt); },
             [](Nir::Macro_Tokens mt) { return Nir::Token::macros_token[mt]; },
 			[](double d) { return to_string(d); },
 			[](const std::string& str) { return str; },
-			[](const identifier& id) { return id.name; },
-			[](eof) { return std::string("<EOF>"); }
+			[](const Nir::identifier& id) { return id.name; },
+			[](Nir::eof) { return std::string("<EOF>"); }
 		}, t);
 	}
 }

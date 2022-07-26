@@ -23,7 +23,7 @@
 int main(int argc, char** argv)
 {
 	if(argc < 2)
-		Error("no input file given", -2).expose();
+		Nir::Error("no input file given", -2).expose();
 	
 	Nir::Module m;
 	Nir::add_standard_functions(m);

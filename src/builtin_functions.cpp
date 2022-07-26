@@ -30,7 +30,7 @@
 
 namespace Nir
 {
-	void add_string_functions(Nir_module& m)
+	void add_string_functions(Module& m)
 	{
 		m.add_external_function("strlen", func::function<number(const std::string&)>(
 			[](const std::string& str)
@@ -62,7 +62,7 @@ namespace Nir
 		));
 	}
 
-	void add_io_functions(Nir_module& m)
+	void add_io_functions(Module& m)
 	{
 		m.add_external_function("print", func::function<void(const std::string&)>(
 			[](const std::string& val)
@@ -81,7 +81,7 @@ namespace Nir
 		));
 	}
 
-	void add_standard_functions(Nir_module& m)
+	void add_standard_functions(Module& m)
 	{
 		add_string_functions(m);
 		add_io_functions(m);

@@ -80,23 +80,23 @@ namespace Nir
 
 namespace std
 {
-	std::string to_string(type_handle t)
+	std::string to_string(Nir::type_handle t)
     {
-		return std::visit(overloaded{
-			[](simple_type st)
+		return std::visit(Nir::overloaded{
+			[](Nir::simple_type st)
             {
 				switch(st)
                 {
-					case simple_type::nothing: return std::string("void");
-					case simple_type::number:  return std::string("number");
-					case simple_type::string: return std::string("string");
+					case Nir::simple_type::nothing: return std::string("void");
+					case Nir::simple_type::number:  return std::string("number");
+					case Nir::simple_type::string: return std::string("string");
 				}
 			},
-			[](const function_type& ft)
+			[](const Nir::function_type& ft)
             {
 				std::string ret = to_string(ft.return_type_id) + "(";
 				const char* separator = "";
-				for(const function_type::param& p: ft.param_type_id)
+				for(const Nir::function_type::param& p: ft.param_type_id)
                 {
 					ret += separator + std::string(p.by_ref ? "var&" : "var") + "arg : " + to_string(p.type_id);
 					separator = ",";

@@ -26,10 +26,10 @@ namespace Nir
 {
 	class Module;
 		
-	void add_string_functions(Nir_module& m);
-	void add_io_functions(Nir_module& m);
+	void add_string_functions(Module& m);
+	void add_io_functions(Module& m);
 
-	void add_standard_functions(Nir_module& m);
+	void add_standard_functions(Module& m);
 }
 
 #endif // __STD_FUNCTIONS__
