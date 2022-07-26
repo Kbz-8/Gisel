@@ -25,16 +25,10 @@ int main(int argc, char** argv)
 	if(argc < 2)
 		Error("no input file given", -2).expose();
 	
-	std::ios::sync_with_stdio(false);
-	
-	Nir_module m;
-	
-	add_standard_functions(m);
-	
+	Nir::Module m;
+	Nir::add_standard_functions(m);
 	auto nir_main = m.create_external_function_caller<void>("main");
-
 	m.load(argv[1]);
-	
 	nir_main();
 
     return 0;

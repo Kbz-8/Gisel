@@ -22,11 +22,14 @@
 
 #include <cstdint>
 
-class Nir_module;
-	
-void add_string_functions(Nir_module& m);
-void add_io_functions(Nir_module& m);
+namespace Nir
+{
+	class Module;
+		
+	void add_string_functions(Nir_module& m);
+	void add_io_functions(Nir_module& m);
 
-void add_standard_functions(Nir_module& m);
+	void add_standard_functions(Nir_module& m);
+}
 
 #endif // __STD_FUNCTIONS__

@@ -23,6 +23,9 @@
 #include "tokens.h"
 #include "streamstack.h"
 
-Token lexe(StreamStack& stream);
+namespace Nir
+{
+	Token lexe(StreamStack& stream);
+}
 
 #endif // __LEXER__

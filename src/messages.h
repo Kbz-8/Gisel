@@ -22,17 +22,20 @@
 
 #include <iostream>
 
-class Message
+namespace Nir
 {
-    public:
-        Message(const char* message) : _message(message) {}
-        Message(std::string message) : _message(message) {}
+	class Message
+	{
+		public:
+			Message(const char* message) : _message(message) {}
+			Message(std::string message) : _message(message) {}
 
-        inline const char* what() const noexcept { return _message.c_str(); }
-        void expose() const { std::cout << OUT_GREEN << "[Nir compiler] " << OUT_DEF  << _message << std::endl; }
-    
-    private:
-        std::string _message;
-};
+			inline const char* what() const noexcept { return _message.c_str(); }
+			void expose() const noexcept { std::cout << OUT_GREEN << "[Nir compiler] " << OUT_DEF  << _message << std::endl; }
+		
+		private:
+			std::string _message;
+	};
+}
 
 #endif // __MESSAGES__

@@ -19,7 +19,7 @@
 
 #include "nir.h"
 
-namespace
+namespace Nir
 {
     struct possible_flow
     {
@@ -312,182 +312,182 @@ namespace
         expression<string>::ptr expr = build_string_expression(ctx, it);
         return create_import_statement(std::move(expr));
     }
-}
 
-void parse_token_value(compiler_context&, tk_iterator& it, const token_value& value)
-{
-    if(it->has_value(value))
-    {
-        ++it;
-        return;
-    }
-    expected_syntax_error(std::to_string(value).c_str(), it->get_line_number()).expose();
-}
+	void parse_token_value(compiler_context&, tk_iterator& it, const token_value& value)
+	{
+		if(it->has_value(value))
+		{
+			++it;
+			return;
+		}
+		expected_syntax_error(std::to_string(value).c_str(), it->get_line_number()).expose();
+	}
 
-std::string parse_declaration_name(compiler_context& ctx, tk_iterator& it)
-{
-    if(!it->is_identifier())
-        unexpected_syntax(it).expose();
+	std::string parse_declaration_name(compiler_context& ctx, tk_iterator& it)
+	{
+		if(!it->is_identifier())
+			unexpected_syntax(it).expose();
 
-    std::string ret = it->get_identifier().name;
-    
-    if(!ctx.can_declare(ret))
-        already_declared_error(ret.c_str(), it->get_line_number()).expose();
+		std::string ret = it->get_identifier().name;
+		
+		if(!ctx.can_declare(ret))
+			already_declared_error(ret.c_str(), it->get_line_number()).expose();
 
-    ++it;
-    
-    return ret;
-}
+		++it;
+		
+		return ret;
+	}
 
-type_handle parse_type(compiler_context& ctx, tk_iterator& it)
-{
-    if(!it->is_keyword())
-        unexpected_syntax(it).expose();
-    
-    type_handle t = nullptr;
-    
-    switch(it->get_token())
-    {
-        case Tokens::type_void:
-            t = ctx.get_handle(simple_type::nothing);
-            ++it;
-            break;
-        case Tokens::type_number:
-            t = ctx.get_handle(simple_type::number);
-            ++it;
-            break;
-        case Tokens::type_string:
-            t = ctx.get_handle(simple_type::string);
-            ++it;
-            break;
-        default: unexpected_syntax(it).expose();
-    }
-    
-    while(it->is_keyword())
-    {
-        switch(it->get_token())
-        {
-            case Tokens::bracket_b:
-            {
-                function_type ft;
-                ft.return_type_id = t;
-                ++it;
-                while(!it->has_value(Tokens::bracket_e))
-                {
-                    if(!ft.param_type_id.empty())
-                        parse_token_value(ctx, it, Tokens::comma);
-                    type_handle param_type = parse_type(ctx, it);
-                    if(it->has_value(Tokens::bitwise_and))
-                    {
-                        ft.param_type_id.push_back({param_type, true});
-                        ++it;
-                    }
-                    else
-                        ft.param_type_id.push_back({param_type, false});
-                }
-                ++it;
-                t = ctx.get_handle(ft);
-                break;
-            }
-            default: return t;
-        }
-    }
-    return t;
-}
+	type_handle parse_type(compiler_context& ctx, tk_iterator& it)
+	{
+		if(!it->is_keyword())
+			unexpected_syntax(it).expose();
+		
+		type_handle t = nullptr;
+		
+		switch(it->get_token())
+		{
+			case Tokens::type_void:
+				t = ctx.get_handle(simple_type::nothing);
+				++it;
+				break;
+			case Tokens::type_number:
+				t = ctx.get_handle(simple_type::number);
+				++it;
+				break;
+			case Tokens::type_string:
+				t = ctx.get_handle(simple_type::string);
+				++it;
+				break;
+			default: unexpected_syntax(it).expose();
+		}
+		
+		while(it->is_keyword())
+		{
+			switch(it->get_token())
+			{
+				case Tokens::bracket_b:
+				{
+					function_type ft;
+					ft.return_type_id = t;
+					++it;
+					while(!it->has_value(Tokens::bracket_e))
+					{
+						if(!ft.param_type_id.empty())
+							parse_token_value(ctx, it, Tokens::comma);
+						type_handle param_type = parse_type(ctx, it);
+						if(it->has_value(Tokens::bitwise_and))
+						{
+							ft.param_type_id.push_back({param_type, true});
+							++it;
+						}
+						else
+							ft.param_type_id.push_back({param_type, false});
+					}
+					++it;
+					t = ctx.get_handle(ft);
+					break;
+				}
+				default: return t;
+			}
+		}
+		return t;
+	}
 
-shared_statement_ptr compile_function_block(compiler_context& ctx, tk_iterator& it, type_handle return_type_id)
-{
-    std::vector<statement_ptr> block = compile_block_contents(ctx, it, possible_flow::in_function(return_type_id));
-    if(return_type_id != type_registry::get_void_handle())
-        block.emplace_back(create_return_statement(build_default_initialization(return_type_id)));
-    return create_shared_block_statement(std::move(block));
-}
+	shared_statement_ptr compile_function_block(compiler_context& ctx, tk_iterator& it, type_handle return_type_id)
+	{
+		std::vector<statement_ptr> block = compile_block_contents(ctx, it, possible_flow::in_function(return_type_id));
+		if(return_type_id != type_registry::get_void_handle())
+			block.emplace_back(create_return_statement(build_default_initialization(return_type_id)));
+		return create_shared_block_statement(std::move(block));
+	}
 
-runtime_context compile(tk_iterator& it, const std::vector<std::pair<std::string, function>>& external_functions, std::vector<std::string> public_declarations)
-{
-    compiler_context ctx;
-    
-    for(const std::pair<std::string, function>& p : external_functions)
-    {
-        get_character get = [i = 0, &p]() mutable { return i < p.first.size() ? int(p.first[i++]) : -1; };
-        StreamStack stream(&get);
-        tk_iterator function_it(stream);
-        function_declaration decl = parse_function_declaration(ctx, function_it);
-        ctx.create_function(decl.name, decl.type_id);
-    }
-    
-    std::unordered_map<std::string, type_handle> public_function_types;
-    
-    for(const std::string& f : public_declarations)
-    {
-        get_character get = [i = 0, &f]() mutable { return i < f.size() ? int(f[i++]) : -1; };
-        StreamStack stream(&get);
-        tk_iterator function_it(stream);
-        function_declaration decl = parse_function_declaration(ctx, function_it);
-        public_function_types.emplace(decl.name, decl.type_id);
-    }
+	runtime_context compile(tk_iterator& it, const std::vector<std::pair<std::string, function>>& external_functions, std::vector<std::string> public_declarations)
+	{
+		compiler_context ctx;
+		
+		for(const std::pair<std::string, function>& p : external_functions)
+		{
+			get_character get = [i = 0, &p]() mutable { return i < p.first.size() ? int(p.first[i++]) : -1; };
+			StreamStack stream(&get);
+			tk_iterator function_it(stream);
+			function_declaration decl = parse_function_declaration(ctx, function_it);
+			ctx.create_function(decl.name, decl.type_id);
+		}
+		
+		std::unordered_map<std::string, type_handle> public_function_types;
+		
+		for(const std::string& f : public_declarations)
+		{
+			get_character get = [i = 0, &f]() mutable { return i < f.size() ? int(f[i++]) : -1; };
+			StreamStack stream(&get);
+			tk_iterator function_it(stream);
+			function_declaration decl = parse_function_declaration(ctx, function_it);
+			public_function_types.emplace(decl.name, decl.type_id);
+		}
 
-    std::vector<expression<lvalue>::ptr> initializers;
-    
-    std::vector<incomplete_function> incomplete_functions;
-    std::unordered_map<std::string, size_t> public_functions;
-    
-    while(it())
-    {
-        if(!std::holds_alternative<Tokens>(it->get_value()))
-            unexpected_syntax(it).expose();
-    
-        bool public_function = false;
-        
-        switch(it->get_token())
-        {
-            case Tokens::kw_public:
-                public_function = true;
-                if(!(++it)->has_value(Tokens::kw_fn))
-                    unexpected_syntax(it).expose();
-            case Tokens::kw_fn:
-            {
-                size_t line_number = it->get_line_number();
-                const incomplete_function& f = incomplete_functions.emplace_back(ctx, it);
+		std::vector<expression<lvalue>::ptr> initializers;
+		
+		std::vector<incomplete_function> incomplete_functions;
+		std::unordered_map<std::string, size_t> public_functions;
+		
+		while(it())
+		{
+			if(!std::holds_alternative<Tokens>(it->get_value()))
+				unexpected_syntax(it).expose();
+		
+			bool public_function = false;
+			
+			switch(it->get_token())
+			{
+				case Tokens::kw_public:
+					public_function = true;
+					if(!(++it)->has_value(Tokens::kw_fn))
+						unexpected_syntax(it).expose();
+				case Tokens::kw_fn:
+				{
+					size_t line_number = it->get_line_number();
+					const incomplete_function& f = incomplete_functions.emplace_back(ctx, it);
 
-                if(public_function)
-                {
-                    auto it = public_function_types.find(f.get_decl().name);
-                
-                    if(it != public_function_types.end() && it->second != f.get_decl().type_id)
-                        semantic_error(std::string("function doesn't match it's declaration " + std::to_string(it->second)).c_str(), line_number).expose();
-                    else
-                        public_function_types.erase(it);
-                
-                    public_functions.emplace(f.get_decl().name, external_functions.size() + incomplete_functions.size() - 1);
-                }
+					if(public_function)
+					{
+						auto it = public_function_types.find(f.get_decl().name);
+					
+						if(it != public_function_types.end() && it->second != f.get_decl().type_id)
+							semantic_error(std::string("function doesn't match it's declaration " + std::to_string(it->second)).c_str(), line_number).expose();
+						else
+							public_function_types.erase(it);
+					
+						public_functions.emplace(f.get_decl().name, external_functions.size() + incomplete_functions.size() - 1);
+					}
 
-                break;
-            }
-            case Tokens::kw_import:
-                compile_import_statement(ctx, it);
-                parse_token_value(ctx, it, Tokens::semicolon);
-            break;
-            default:
-                for(expression<lvalue>::ptr& expr : compile_variable_declaration(ctx, it))
-                    initializers.push_back(std::move(expr));
-                parse_token_value(ctx, it, Tokens::semicolon);
-            break;
-        }
-    }
-    
-    if(!public_function_types.empty())
-        semantic_error(std::string("public function '" + public_function_types.begin()->first + "' is not defined.").c_str(), it->get_line_number()).expose();
-    
-    std::vector<function> functions;
-    
-    functions.reserve(external_functions.size() + incomplete_functions.size());
-    
-    for(const std::pair<std::string, function>& p : external_functions)
-        functions.emplace_back(p.second);
-    
-    for(incomplete_function& f : incomplete_functions)
-        functions.emplace_back(f.compile(ctx));
-    
-    return runtime_context(std::move(initializers), std::move(functions), std::move(public_functions));
+					break;
+				}
+				case Tokens::kw_import:
+					compile_import_statement(ctx, it);
+					parse_token_value(ctx, it, Tokens::semicolon);
+				break;
+				default:
+					for(expression<lvalue>::ptr& expr : compile_variable_declaration(ctx, it))
+						initializers.push_back(std::move(expr));
+					parse_token_value(ctx, it, Tokens::semicolon);
+				break;
+			}
+		}
+		
+		if(!public_function_types.empty())
+			semantic_error(std::string("public function '" + public_function_types.begin()->first + "' is not defined.").c_str(), it->get_line_number()).expose();
+		
+		std::vector<function> functions;
+		
+		functions.reserve(external_functions.size() + incomplete_functions.size());
+		
+		for(const std::pair<std::string, function>& p : external_functions)
+			functions.emplace_back(p.second);
+		
+		for(incomplete_function& f : incomplete_functions)
+			functions.emplace_back(f.compile(ctx));
+		
+		return runtime_context(std::move(initializers), std::move(functions), std::move(public_functions));
+	}
 }

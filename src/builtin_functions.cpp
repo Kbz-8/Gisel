@@ -28,59 +28,62 @@
 #include <cstdlib>
 #include <cstdarg>
 
-void add_string_functions(Nir_module& m)
+namespace Nir
 {
-    m.add_external_function("strlen", func::function<number(const std::string&)>(
-        [](const std::string& str)
-        {
-            return str.length();
-        }
-    ));
-    
-    m.add_external_function("substr", func::function<std::string(const std::string&, number, number)>(
-        [](const std::string& str, number from, number count)
-        {
-            return str.substr(size_t(from), size_t(count));
-        }
-    ));
+	void add_string_functions(Nir_module& m)
+	{
+		m.add_external_function("strlen", func::function<number(const std::string&)>(
+			[](const std::string& str)
+			{
+				return str.length();
+			}
+		));
+		
+		m.add_external_function("substr", func::function<std::string(const std::string&, number, number)>(
+			[](const std::string& str, number from, number count)
+			{
+				return str.substr(size_t(from), size_t(count));
+			}
+		));
 
-    m.add_external_function("to_str", func::function<std::string(number)>(
-        [](number num)
-        {
-            return num == (int)num ? std::to_string((int)num) : std::to_string(num);
-        }
-    ));
-    m.add_external_function("to_num", func::function<number(const std::string&)>(
-        [](const std::string& str)
-        {
-            for(char const& c : str)
-                runtime_assertion(std::isdigit(c), "trying to convert non digit string to number");
-            return std::stod(str);
-        }
-    ));
-}
+		m.add_external_function("to_str", func::function<std::string(number)>(
+			[](number num)
+			{
+				return num == (int)num ? std::to_string((int)num) : std::to_string(num);
+			}
+		));
+		m.add_external_function("to_num", func::function<number(const std::string&)>(
+			[](const std::string& str)
+			{
+				for(char const& c : str)
+					runtime_assertion(std::isdigit(c), "trying to convert non digit string to number");
+				return std::stod(str);
+			}
+		));
+	}
 
-void add_io_functions(Nir_module& m)
-{
-    m.add_external_function("print", func::function<void(const std::string&)>(
-        [](const std::string& val)
-        {
-            std::cout << val << std::endl;
-        }
-    ));
+	void add_io_functions(Nir_module& m)
+	{
+		m.add_external_function("print", func::function<void(const std::string&)>(
+			[](const std::string& val)
+			{
+				std::cout << val << std::endl;
+			}
+		));
 
-    m.add_external_function("entry", func::function<std::string()>(
-        []()
-        {
-            std::string str;
-            std::getline(std::cin, str);
-            return str;
-        }
-    ));
-}
+		m.add_external_function("entry", func::function<std::string()>(
+			[]()
+			{
+				std::string str;
+				std::getline(std::cin, str);
+				return str;
+			}
+		));
+	}
 
-void add_standard_functions(Nir_module& m)
-{
-    add_string_functions(m);
-    add_io_functions(m);
+	void add_standard_functions(Nir_module& m)
+	{
+		add_string_functions(m);
+		add_io_functions(m);
+	}
 }
