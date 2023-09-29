@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -24,7 +24,7 @@
 #include <iostream>
 #include "utils.h"
 
-namespace Nir
+namespace Gisel
 {
 	class Warning
 	{
@@ -33,7 +33,7 @@ namespace Nir
 			Warning(std::string message, size_t line);
 
 			inline const char* what() const noexcept { return _message.c_str(); }
-			inline void expose() const noexcept { std::cout << OUT_MAGENTA << "Nir warning : " << OUT_DEF << _message << ", line : " << _line << std::endl; }
+			inline void expose() const noexcept { std::cout << OUT_MAGENTA << "Gisel warning : " << OUT_DEF << _message << ", line : " << _line << std::endl; }
 			inline int line() const noexcept { return _line; }
 		
 		private:

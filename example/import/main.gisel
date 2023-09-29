@@ -1,0 +1,6 @@
+import "import.gisel";
+
+export fn main() -> void
+{
+	say_hello();
+}

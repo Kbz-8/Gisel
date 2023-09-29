@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include "expression.h"
 
-namespace Nir
+namespace Gisel
 {
 	enum struct flow_type
 	{

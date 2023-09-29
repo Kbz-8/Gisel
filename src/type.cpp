@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #include "type.h"
 #include "utils.h"
 
-namespace Nir
+namespace Gisel
 {
 	bool type_registry::types_less::operator()(const type& t1, const type& t2) const
 	{
@@ -80,23 +80,23 @@ namespace Nir
 
 namespace std
 {
-	std::string to_string(Nir::type_handle t)
+	std::string to_string(Gisel::type_handle t)
     {
-		return std::visit(Nir::overloaded{
-			[](Nir::simple_type st)
+		return std::visit(Gisel::overloaded{
+			[](Gisel::simple_type st)
             {
 				switch(st)
                 {
-					case Nir::simple_type::nothing: return std::string("void");
-					case Nir::simple_type::number:  return std::string("number");
-					case Nir::simple_type::string: return std::string("string");
+					case Gisel::simple_type::nothing: return std::string("void");
+					case Gisel::simple_type::number:  return std::string("number");
+					case Gisel::simple_type::string: return std::string("string");
 				}
 			},
-			[](const Nir::function_type& ft)
+			[](const Gisel::function_type& ft)
             {
 				std::string ret = to_string(ft.return_type_id) + "(";
 				const char* separator = "";
-				for(const Nir::function_type::param& p: ft.param_type_id)
+				for(const Gisel::function_type::param& p: ft.param_type_id)
                 {
 					ret += separator + std::string(p.by_ref ? "var&" : "var") + "arg : " + to_string(p.type_id);
 					separator = ",";

@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #ifndef __SINGLETON__
 #define __SINGLETON__
 
-namespace Nir
+namespace Gisel
 {
 	template <typename T>
 	class Singleton

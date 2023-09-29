@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #include "tk_iterator.h"
 #include "lexer.h"
 
-namespace Nir
+namespace Gisel
 {
 	tk_iterator::tk_iterator(StreamStack& stream) : _current(eof(), 0), _get_next_token([&stream](){ return lexe(stream); }) { ++(*this); }
 

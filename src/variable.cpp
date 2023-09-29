@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -19,7 +19,7 @@
 
 #include "variable.h"
 
-namespace Nir
+namespace Gisel
 {
 	template<typename T>
 	variable_impl<T>::variable_impl(T value) : value(std::move(value)) {}

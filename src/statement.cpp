@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -22,7 +22,7 @@
 #include "expression.h"
 #include "runtime_context.h"
 
-namespace Nir
+namespace Gisel
 {
 	flow::flow(flow_type type, int break_level) : _type(type), _break_level(break_level) {}
 

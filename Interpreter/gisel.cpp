@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -17,19 +17,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nir.h>
+#include <gisel.h>
 #include <cctype>
 
 int main(int argc, char** argv)
 {
 	if(argc < 2)
-		Nir::Error("no input file given", -2).expose();
+		Gisel::Error("no input file given", -2).expose();
 	
-	Nir::Module m;
-	Nir::add_standard_functions(m);
-	auto nir_main = m.create_external_function_caller<void>("main");
+	Gisel::Module m;
+	Gisel::add_standard_functions(m);
+	auto Gisel_main = m.create_external_function_caller<void>("main");
 	m.load(argv[1]);
-	nir_main();
+	Gisel_main();
 
     return 0;
 }

@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __NIR__
-#define __NIR__
+#ifndef __GISEL__
+#define __GISEL__
 
 #include "tokens.h"
 #include "streamstack.h"
@@ -36,9 +36,9 @@
 #include "runtime_context.h"
 #include "compiler.h"
 #include "incomplete_function.h"
-#include <nir_api.h>
+#include <gisel_api.h>
 #include "builtin_functions.h"
 #include "statement.h"
 #include "messages.h"
 
-#endif // __NIR__
+#endif

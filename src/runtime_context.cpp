@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #include "runtime_context.h"
 #include "errors.h"
 
-namespace Nir
+namespace Gisel
 {
 	runtime_context::runtime_context(std::vector<expression<lvalue>::ptr> initializers, std::vector<function> functions, std::unordered_map<std::string, size_t> public_functions) : _functions(std::move(functions)), _public_functions(std::move(public_functions)), _initializers(std::move(initializers)), _retval_idx(0)
 	{

@@ -1,3 +1,6 @@
 .xmake/
 build/
 build-int/
+*.swp
+*.swx
+*.o

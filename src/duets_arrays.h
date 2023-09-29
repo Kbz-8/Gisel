@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -26,7 +26,7 @@
 #include <utility>
 #include <cassert>
 
-namespace Nir
+namespace Gisel
 {
 	template <class T>
 	struct default_t // default type class

@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -22,7 +22,7 @@
 #include "warnings.h"
 #include "macro.h"
 
-namespace Nir
+namespace Gisel
 {
 	enum class char_type
 	{

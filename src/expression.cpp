@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -27,7 +27,7 @@
 #include "compiler_context.h"
 #include <type_traits>
 
-namespace Nir
+namespace Gisel
 {
 	template <class V, typename T>
 	struct is_boxed { static constexpr const bool value = false; };

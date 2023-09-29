@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -22,7 +22,7 @@
 
 #include <filesystem>
 
-namespace Nir
+namespace Gisel
 {
     bool is_convertible(type_handle type_from, bool lvalue_from, type_handle type_to, bool lvalue_to)
     {

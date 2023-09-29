@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -28,7 +28,7 @@
 #include "variable.h"
 #include "expression.h"
 
-namespace Nir
+namespace Gisel
 {
 	class runtime_context
 	{

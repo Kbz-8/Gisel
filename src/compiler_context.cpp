@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -19,7 +19,7 @@
 
 #include "compiler_context.h"
 
-namespace Nir
+namespace Gisel
 {
 	identifier_info::identifier_info(type_handle type_id, size_t index, identifier_scope scope) : _type_id(type_id), _index(index), _scope(scope) {}
 

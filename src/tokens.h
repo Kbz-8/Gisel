@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -27,7 +27,7 @@
 #include "duets_arrays.h"
 #include "utils.h"
 
-namespace Nir
+namespace Gisel
 {
 	enum class Tokens
 	{
@@ -216,18 +216,18 @@ namespace Nir
 
 namespace std
 {
-	inline std::string to_string(Nir::Tokens t) { return Nir::Token::kw_tokens.have(t) ? std::move(std::string(Nir::Token::kw_tokens[t])) : std::move(std::string(Nir::Token::operators_token[t])); }
+	inline std::string to_string(Gisel::Tokens t) { return Gisel::Token::kw_tokens.have(t) ? std::move(std::string(Gisel::Token::kw_tokens[t])) : std::move(std::string(Gisel::Token::operators_token[t])); }
 	
-	inline std::string to_string(const Nir::token_value& t)
+	inline std::string to_string(const Gisel::token_value& t)
     {
-		return std::visit(Nir::overloaded
+		return std::visit(Gisel::overloaded
         {
-			[](Nir::Tokens rt) { return to_string(rt); },
-            [](Nir::Macro_Tokens mt) { return Nir::Token::macros_token[mt]; },
+			[](Gisel::Tokens rt) { return to_string(rt); },
+            [](Gisel::Macro_Tokens mt) { return Gisel::Token::macros_token[mt]; },
 			[](double d) { return to_string(d); },
 			[](const std::string& str) { return str; },
-			[](const Nir::identifier& id) { return id.name; },
-			[](Nir::eof) { return std::string("<EOF>"); }
+			[](const Gisel::identifier& id) { return id.name; },
+			[](Gisel::eof) { return std::string("<EOF>"); }
 		}, t);
 	}
 }

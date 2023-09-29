@@ -1,14 +1,14 @@
-# NIR
+# Genuine Interpreted Shitty Educational Language
 
-Nir is a small scripting language inspired by the C programming language.
+Gisel is a small scripting language inspired by the C programming language.
 Unlike C, it has no pointers but references instead. It was made for fun for school and is not really serious.
 Its interpreter is pretty fast because it's written in C++.
-There is an API to interact between C++ and Nir that allows you to write C++ functions and run them in your Nir code.
+There is an API to interact between C++ and Gisel that allows you to write C++ functions and run them in your Gisel code.
 
-Here's an example of Nir code
+Here's an example of Gisel code
 
 ``` Rust
-import "std_memory.nir"; // imports std_swap
+import "std_memory.gisel"; // imports std_swap
 
 export fn main() -> void
 {

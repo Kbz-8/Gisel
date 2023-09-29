@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-namespace Nir
+namespace Gisel
 {
 	class Message
 	{
@@ -31,7 +31,7 @@ namespace Nir
 			Message(std::string message) : _message(message) {}
 
 			inline const char* what() const noexcept { return _message.c_str(); }
-			void expose() const noexcept { std::cout << OUT_GREEN << "[Nir compiler] " << OUT_DEF  << _message << std::endl; }
+			void expose() const noexcept { std::cout << OUT_GREEN << "[Gisel compiler] " << OUT_DEF  << _message << std::endl; }
 		
 		private:
 			std::string _message;

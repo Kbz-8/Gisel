@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -28,7 +28,7 @@
 #include <windows.h>
 #endif 
 
-namespace Nir
+namespace Gisel
 {
 	class Error
 	{
@@ -71,11 +71,11 @@ namespace Nir
 				#ifdef _WIN32
 					HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-					std::cout << "Nir runtime error";
+					std::cout << "Gisel runtime error";
 					SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 					std::cout << " : " << _message << std::endl;
 				#else
-					std::cout << OUT_RED << "Nir runtime error" << OUT_DEF << " : " << _message << std::endl;
+					std::cout << OUT_RED << "Gisel runtime error" << OUT_DEF << " : " << _message << std::endl;
 				#endif
 				std::exit(EXIT_SUCCESS);
 			}

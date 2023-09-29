@@ -3,6 +3,5 @@
 export fn main() -> void
 {
 	var word : str = "twelve is equal to {TWELVE}";
-	var t : num = to_num(word);
 	print(word);
 }

@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #ifndef __UTILS__
 #define __UTILS__
 
-namespace Nir
+namespace Gisel
 {
 	#define OUT_RED "\033[1;31m"
 	#define OUT_GREEN "\033[1;32m"

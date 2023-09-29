@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <cstdio>
-#include <nir_api.h>
+#include <gisel_api.h>
 #include "errors.h"
 #include "streamstack.h"
 #include "lexer.h"
@@ -27,7 +27,7 @@
 #include "file.h"
 #include "tk_iterator.h"
 
-namespace Nir
+namespace Gisel
 {
 	class Module_impl
 	{

@@ -1,5 +1,5 @@
 /**
- * This file is a part of the Nir Interpreter
+ * This file is a part of the Gisel Interpreter
  *
  * Copyright (C) 2022 @kbz_8
  *
@@ -20,7 +20,7 @@
 #include "warnings.h"
 #include <string.h>
 
-namespace Nir
+namespace Gisel
 {
 	Warning::Warning(const char* message, size_t line)
 	{
