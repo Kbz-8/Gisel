@@ -17,9 +17,133 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-external fn std_swap(var& x : num, var& y : num) -> void
+fn swap(var& x : num, var& y : num) -> void
 {
 	var temp : num = x;
 	x = y;
 	y = temp;
+}
+
+fn __gisel_std_quick_sort_internal(var[]& array : num, var begin : num, var end : num) -> void
+{
+	if(end - begin < 2)
+		return;
+	
+	var pivot : num = array[end - 1];
+
+	var i : num = begin;
+	
+	for(var j : num = begin; j < end - 1; ++j)
+		if(array[j] < pivot)
+			swap(:array[i++], :array[j]);
+	
+	swap(:array[i], :array[end - 1]);
+
+	__gisel_std_quick_sort_internal(:array, begin, i);
+	__gisel_std_quick_sort_internal(:array, i + 1, end);
+}
+
+fn sort(var[]& array : num) -> void
+{
+	__gisel_std_quick_sort_internal(:array, 0, size(array));
+}
+
+fn erase(var[]& array : num, var begin : num, var end : num) -> void
+{
+	var[] res : num;
+	var j : num = 0;
+	var _size : num = size(array);
+	for(var i : num = 0; i < _size; i++)
+	{
+		// I cannot use || because they make mess with 'i' ._.
+		if(i < begin)
+			res[j++] = array[i];
+		elif(i > end)
+			res[j++] = array[i];
+	}
+	array = res;
+}
+
+fn pop(var[]& array : num, var index : num) -> void
+{
+	var[] res : num;
+	var j : num = 0;
+	var _size : num = size(array);
+	for(var i : num = 0; i < _size; i++)
+	{
+		if(i != index)
+			res[j++] = array[i];
+	}
+
+	array = res;
+}
+
+fn pop_back(var[]& array : num) -> void
+{
+	pop(:array, size(array) - 1);
+}
+
+fn pop_front(var[]& array : num) -> void
+{
+	pop(:array, 0);
+}
+
+fn insert(var[]& array : num, var[] elems : num, var index : num) -> void
+{
+	var[] res : num;
+	var j : num = 0;
+	var _size : num = size(array);
+	for(var i : num = 0; i < _size; i++)
+	{
+		if(i == index)
+		{
+			var _size_elem : num = size(elems);
+			for(var k : num = 0; k < _size_elem; k++)
+				res[j++] = elems[k];
+		}
+		res[j++] = array[i];
+	}
+
+	array = res;
+}
+
+fn push(var[]& array : num, var value : num, var index : num) -> void
+{
+	var[] res : num;
+	var j : num = 0;
+	var _size : num = size(array);
+	for(var i : num = 0; i < _size; i++)
+	{
+		if(i == index)
+			res[j++] = value;
+		else
+			res[j++] = array[i];
+	}
+
+	array = res;
+}
+
+fn push_back(var[]& array : num, var value : num) -> void
+{
+	push(:array, value, size(array) - 1);
+}
+
+fn push_front(var[]& array : num, var value : num) -> void
+{
+	push(:array, value, 0);
+}
+
+fn front(var[] array : num) -> num
+{
+	return array[0];
+}
+
+fn back(var[] array : num) -> num
+{
+	return array[size(array) - 1];
+}
+
+fn clearArray(var[]& array : num) -> void
+{
+	array = {};
 }

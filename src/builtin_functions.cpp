@@ -71,12 +71,19 @@ namespace Gisel
 			}
 		));
 
-		m.add_external_function("entry", func::function<std::string()>(
+		m.add_external_function("input", func::function<std::string()>(
 			[]()
 			{
 				std::string str;
 				std::getline(std::cin, str);
 				return str;
+			}
+		));
+
+		m.add_external_function("random", func::function<number(number)>(
+			[](number x)
+			{
+				return rand() % int(x);
 			}
 		));
 	}
@@ -85,5 +92,19 @@ namespace Gisel
 	{
 		add_string_functions(m);
 		add_io_functions(m);
+
+		m.add_external_function("int", func::function<number(number)>(
+			[](number x)
+			{
+				return int(x);
+			}
+		));
+
+		m.add_external_function("exit", func::function<void()>(
+			[]()
+			{
+				std::exit(EXIT_SUCCESS);
+			}
+		));
 	}
 }

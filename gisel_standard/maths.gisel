@@ -1,0 +1,117 @@
+/**
+ * This file is a part of Gisel standard library
+ *
+ * Copyright (C) 2022 @kbz_8
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+fn pow(var x : num, var p : num) -> num
+{
+	if(p == 0)
+		return 1;
+	var res : num = x;
+	if(p > 1)
+		while(p > 1) { res = res * x; p--; }
+	else
+		while(p < 1) { res = res / x; p++; }
+	return res;
+}
+
+fn abs(var x : num) -> num
+{
+	return x >= 0 ? x : -x;
+}
+
+fn fact(var n : num) -> num
+{
+	return n <= 1 ? 1 : n * fact(n - 1);
+}
+
+fn exp(var x : num) -> num
+{
+    var res : num = x + 1;
+    for(var i : num = 2; i < 10; i++) // 10 is an arbitrary value for precision
+    	res = res + (pow(x, i) / fact(i));
+    return res;
+}
+
+fn sin(var x : num) -> num
+{
+    var y : num =  x;
+    var s : num = -1;
+
+    for(var i : num = 3; i <= 100; i += 2)
+    {
+		y += s * (pow(x, i) / fact(i));
+		s *= -1;
+    }
+
+    return y;
+}
+
+fn cos(var x : num) -> num
+{
+    var y : num =  1;
+    var s : num = -1;
+
+    for(var i : num = 2; i <= 100; i += 2)
+    {
+		y += s * (pow(x, i) / fact(i));
+		s *= -1;
+    }
+
+    return y;
+}
+
+fn tan(var x : num) -> num
+{
+	return sin(x) / cos(x);
+}
+
+fn sqrt(var x : num) -> num
+{
+	var z : num = 1;
+	for(var i : num = 1; i <= 10; i++)
+		z -= (z * z - x) / (2 * z);
+	return z;
+}
+
+fn ln(var x : num) -> num
+{
+	var yn  : num = x - 1;
+	var yn1 : num = yn;
+
+	do
+	{
+		yn = yn1;
+        yn1 = yn + 2 * (x - exp(yn)) / (x + exp(yn));
+	} while(abs(yn - yn1) > 0.005);
+	return yn;
+}
+
+fn log(var x : num, var base : num) -> num
+{
+	return ln(x) / ln(base);
+}
+
+fn log10(var x : num) -> num
+{
+	return log(x, 10);
+}
+
+fn log2(var x : num) -> num
+{
+	return log(x, 2);
+}
